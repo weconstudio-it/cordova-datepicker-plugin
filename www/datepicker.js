@@ -13,7 +13,7 @@ var DatePicker = (function (gap) {
 
 	DatePicker.prototype.bind = function(callback) {
 
-		$('[data-native-picker]').unbind('focus').bind('focus', function(event) {
+		$('[data-native-picker]').unbind('click').bind('click', function(event) {
 			var pickerType = $(this).attr('data-native-picker');
 			var sender = $(this);
 			
