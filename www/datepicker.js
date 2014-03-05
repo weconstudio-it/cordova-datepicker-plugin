@@ -23,8 +23,8 @@ var DatePicker = (function (gap) {
 			var format = pickerType == 'time' ? "HH:mm" : "dd/MMM/yyyy";
 			
 			if (pickerType == 'time') {
-				myNewDate.setMinutes(time.substr(0, 2));
-	        	myNewDate.setMinutes(time.substr(3, 2));
+				myNewDate.setMinutes(currentField.val().substr(0, 2));
+	        	myNewDate.setMinutes(currentField.val().substr(3, 2));
 			}
 	
 	        // Same handling for iPhone and Android
