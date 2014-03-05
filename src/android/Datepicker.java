@@ -57,6 +57,7 @@ public class Datepicker extends CordovaPlugin {
 		 * above date fields
 		 */
 		int month = -1, day = -1, year = -1, hour = -1, min = -1;
+		
 		try {
 			JSONObject obj = data.getJSONObject(0);
 			action = obj.getString("mode");
@@ -88,8 +89,8 @@ public class Datepicker extends CordovaPlugin {
 			runnable = new Runnable() {
 				public void run() {
 					final TimeSetListener timeSetListener = new TimeSetListener(datePickerPlugin, callbackContext);
-					final TimePickerDialog timeDialog = new TimePickerDialog(currentCtx, timeSetListener, mHour,
-							mMinutes, true);
+					final DurationTimePickDialog timeDialog = new DurationTimePickDialog(currentCtx, timeSetListener, mHour, mMinutes, true, 10);
+					
 					timeDialog.show();
 				}
 			};
@@ -160,5 +161,61 @@ public class Datepicker extends CordovaPlugin {
 			callbackContext.success(date.toLocaleString());
 		}
 	}
+	
+	private class DurationTimePickDialog extends TimePickerDialog
+    {
+        final OnTimeSetListener mCallback;
+        TimePicker mTimePicker;
+        final int increment;
+
+        public DurationTimePickDialog(Context context, OnTimeSetListener callBack, int hourOfDay, int minute, boolean is24HourView, int increment)
+        {
+            super(context, callBack, hourOfDay, minute/increment, is24HourView);
+            this.mCallback = callBack;
+            this.increment = increment;
+        }
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+                if (mCallback != null && mTimePicker!=null) {
+                    mTimePicker.clearFocus();
+                    mCallback.onTimeSet(mTimePicker, mTimePicker.getCurrentHour(),
+                            mTimePicker.getCurrentMinute()*increment);
+                }
+        }
+
+        @Override
+        protected void onStop()
+        {
+            // override and do nothing
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState)
+        {
+            super.onCreate(savedInstanceState);
+            try
+            {
+                Class<?> rClass = Class.forName("com.android.internal.R$id");
+                Field timePicker = rClass.getField("timePicker");
+                this.mTimePicker = (TimePicker)findViewById(timePicker.getInt(null));
+                Field m = rClass.getField("minute");
+
+                NumberPicker mMinuteSpinner = (NumberPicker)mTimePicker.findViewById(m.getInt(null));
+                mMinuteSpinner.setMinValue(0);
+                mMinuteSpinner.setMaxValue((60/increment)-1);
+                List<String> displayedValues = new ArrayList<String>();
+                for(int i=0;i<60;i+=increment)
+                {
+                    displayedValues.add(String.format("%02d", i));
+                }
+                mMinuteSpinner.setDisplayedValues(displayedValues.toArray(new String[0]));
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
 
 }
