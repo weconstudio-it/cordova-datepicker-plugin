@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.apache.cordova.datepicker;
+package it.weconstudio.phonegap.plugins.android;
 
 import java.util.Calendar;
 import java.util.Date;

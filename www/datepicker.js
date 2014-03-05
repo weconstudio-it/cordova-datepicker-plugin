@@ -11,6 +11,43 @@ var DatePicker = (function (gap) {
 		this._callback;
 	}
 
+	DatePicker.prototype.bind = function(callback) {
+
+		$('[data-native-picker]').unbind('focus').bind('focus', function(event) {
+			var pickerType = $(this).attr('data-native-picker');
+			var sender = $(this);
+			
+	        var currentField = $(this);
+	        var value = currentField.val();
+	        var myNewDate = Date.parse(currentField.val()) || new Date();
+			var format = pickerType == 'time' ? "HH:mm" : "dd/MMM/yyyy";
+			
+			if (pickerType == 'time') {
+				myNewDate.setMinutes(time.substr(0, 2));
+	        	myNewDate.setMinutes(time.substr(3, 2));
+			}
+	
+	        // Same handling for iPhone and Android
+	        window.plugins.datePicker.show({
+	            date : myNewDate,
+	            mode : pickerType, // date or time or blank for both
+	            allowOldDates : true
+	        }, function(returnDate) {
+	            var newDate = new Date(returnDate);
+	            
+	            // let's call the callback if it's passed
+	            if (typeof callback == 'function') {
+	            	callback (sender, newDate);	
+	            } else {	            
+		            currentField.val(newDate.toString(format));
+		
+		            // This fixes the problem you mention at the bottom of this script with it not working a second/third time around, because it is in focus.
+		            currentField.blur();
+	            }
+	        });
+	    });
+	}
+
 	/**
 	 * show - true to show the ad, false to hide the ad
 	 */
@@ -60,6 +97,5 @@ var DatePicker = (function (gap) {
     });
 
 	return DatePicker;
-
 
 })(window.cordova || window.Cordova || window.PhoneGap);
