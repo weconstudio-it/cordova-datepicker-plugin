@@ -19,14 +19,16 @@ var DatePicker = (function (gap) {
 			
 	        var currentField = $(this);
 	        var value = currentField.val();
-	        var myNewDate = Date.parse(currentField.val()) || new Date();
+	        //var myNewDate = Date.parse(currentField.val()) || new Date();
 			var format = pickerType == 'time' ? "HH:mm" : "dd/MMM/yyyy";
 			
-			if (pickerType == 'time') {
+			/*if (pickerType == 'time') {
 				myNewDate.setMinutes(currentField.val().substr(0, 2));
 	        	myNewDate.setMinutes(currentField.val().substr(3, 2));
-			}
+			}*/
 	
+			var myNewDate = new Date();
+			
 	        // Same handling for iPhone and Android
 	        window.plugins.datePicker.show({
 	            date : myNewDate,
