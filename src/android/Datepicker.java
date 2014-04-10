@@ -94,7 +94,7 @@ public class Datepicker extends CordovaPlugin {
 			runnable = new Runnable() {
 				public void run() {
 					final TimeSetListener timeSetListener = new TimeSetListener(datePickerPlugin, callbackContext);
-					final DurationTimePickDialog timeDialog = new DurationTimePickDialog(currentCtx, timeSetListener, mHour, mMinutes, true, 10);
+					final DurationTimePickDialog timeDialog = new DurationTimePickDialog(currentCtx, timeSetListener, mHour, mMinutes, true, 15);
 					
 					timeDialog.show();
 				}
